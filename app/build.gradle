@@ -1,0 +1,555 @@
+import java.nio.file.FileVisitResult
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+
+}
+
+
+task createPom doLast{
+//    println("=====" + configurations.implementation.allDependencies)
+//    def depsNode1  = asNode().appendNode('dependencies')
+//    configurations.implementation.allDependencies.each {  dep ->
+//        def depNode  = depsNode1.appendNode('dependency')
+//        println(">>>>" + dep.name)
+//        depNode.appendNode('groupId', dep.group)
+//        depNode.appendNode('artifactId', dep.name)
+//        depNode.appendNode('version', dep.version)
+//        //optional add scope
+//        //optional add transitive exclusions
+//    }
+    description "create Pom for libY SDK"
+    pom {
+        project {
+            groupId 'com.angei'
+            artifactId 'gradle-first'
+            version '1.0.0'
+            packaging 'jar'
+        }
+    }.withXml {
+        def depsNode  = asNode().appendNode('dependencies')
+
+        configurations.implementation.allDependencies.each {  dep ->
+            def depNode  = depsNode.appendNode('dependency')
+            println(">>>>" + dep.name)
+            depNode.appendNode('groupId', dep.group)
+            depNode.appendNode('artifactId', dep.name)
+            depNode.appendNode('version', dep.version)
+            //optional add scope
+            //optional add transitive exclusions
+        }
+
+
+//        dependencies.each { dependency ->
+//            //通过本地引用的不要打进去
+//            if (dependency.name != "unspecified") {
+//                println(">>>>" + dependency.name)
+//                def dependencyNode = dependenciesNode.appendNode('dependency')
+//                dependencyNode.appendNode('groupId', dependency.group)
+//                dependencyNode.appendNode('artifactId', dependency.name)
+//                dependencyNode.appendNode('version', dependency.version)
+//                dependencyNode.appendNode('scope', "compile")
+//
+//            }
+//        }
+//        compiles.each {
+//            it.allDependencies.each { dependency ->
+//                //通过本地引用的不要打进去
+//                if (dependency.name != "unspecified") {
+//                    println(">>>>" + dependency.name)
+//                    def dependencyNode = dependenciesNode.appendNode('dependency')
+//                    dependencyNode.appendNode('groupId', dependency.group)
+//                    dependencyNode.appendNode('artifactId', dependency.name)
+//                    dependencyNode.appendNode('version', dependency.version)
+//                    dependencyNode.appendNode('scope', "compile")
+//
+//                }
+//            }
+//        }
+    }.writeTo("${rootProject.buildDir}/pom1.xml")
+
+}
+
+task writeNewPom doLast {
+    pom {
+        project {
+            inceptionYear '2008'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("$buildDir/pom.xml")
+}
+
+public void test() {
+    println "这是Java测试代码"
+}
+
+def test1() {
+    println "这是Groovy测试代码"
+    return ""
+}
+
+def getProp(name,age) {
+    name + age
+}
+
+class MyProject {
+    def name
+    def path
+}
+
+class Person{
+    String height
+    int age
+}
+
+
+
+
+def to(Closure closure) {
+    closure.call()
+}
+
+//def android = {
+//    compileSdkVersion 25
+//    buildToolsVersion "22.1.1"
+//
+//    defaultConfig1{
+//        minSdkVersion 15
+//        targetSdkVersion1 31
+//        versionCode 1
+//        versionName "1.0"
+//    }
+//}
+
+class Android {
+    int mCompileSdkVersion
+    String mBuildToolsVersion
+    BefaultConfig mBefaultConfig
+    Android() {
+        this.mBefaultConfig = new BefaultConfig()
+    }
+
+    void defaultConfig1(Closure closure) {
+        closure.setDelegate(mProductFlavor)
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+        closure.call()
+    }
+
+
+
+}
+
+class BefaultConfig {
+    int mVersionCode
+    String mVersionName
+    int mMinSdkVersion
+    int mTargetSdkVersion
+}
+
+
+class OuterClass {
+    class InnerClass {
+        def outerClosure = {
+            def innerClosure = {}
+            printMsg "innerClosure", innerClosure
+            println "--------"
+            printMsg "outerClosure",outerClosure
+        }
+
+        def printMsg(flag,Closure closure1) {
+            def thisObject = closure1.getThisObject()
+            def ownerObject = closure1.getOwner()
+            def delegate = closure1.getDelegate()
+            println "${flag} this: ${thisObject.toString()}"
+            println "${flag} owne: ${ownerObject.toString()}"
+            println "${flag} delegate: ${delegate.toString()}"
+        }
+    }
+}
+
+class Persons {
+    String name
+    int age
+
+    void eat(String food) {
+        println "你喂的${food}真难吃"
+    }
+
+    @Override
+    String toString() {
+        return "Persons{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}'
+    }
+}
+
+def eat(String food) {
+    println "我根本不会吃，不要喂我${food}"
+}
+
+def pp = {
+    name = "hanmeimei"
+    age = 26
+    eat("油条")
+    eat "汉堡"
+}
+
+
+
+class View {
+    private Closure onClickListener
+    Timer timer
+    View() {
+        timer = new Timer()
+        timer.schedule(new TimerTask() {
+            @Override
+            void run() {
+                perOnClick()
+            }
+        },1000,3000)
+    }
+
+    void setOnClickListener(Closure closure1) {
+        this.onClickListener = closure1
+    }
+
+    private void perOnClick() {
+        if (onClickListener != null) {
+            println "onclick"
+            onClickListener(this)
+        }
+    }
+
+    @Override
+    String toString() {
+        return "this is view"
+    }
+}
+
+
+
+task test2 {
+
+
+    copy {
+
+    }
+    View view = new View()
+    def m = { View v ->
+        println "点击了。。。  ${System.currentTimeMillis() / 1000}"
+    }
+    view.setOnClickListener(m)
+
+    def person = new Persons(name:"lilei",age:11)
+    println person.toString()
+
+    pp.delegate = person
+    pp.setResolveStrategy(Closure.OWNER_FIRST)
+    pp.call()
+    println person.toString()
+
+//    OuterClass.InnerClass innerClass = new OuterClass.InnerClass()
+//    innerClass.outerClosure.call()
+}
+
+//task test1 {
+//
+//
+//
+//
+//
+//    def process = "adb shell getprop".execute()
+//    println "process: ${process}"
+//
+//    def filex = new File(rootProject.rootDir.path + "/序列化.txt")
+//    boolean isVertical = true
+//    String appName = "com.qiyi.video.iv"
+//    filex.withDataOutputStream {out ->
+//        out.writeBoolean(isVertical)
+//        out.writeUTF(appName)
+//    }
+//
+//    filex.withDataInputStream {dis ->
+//        println dis.readBoolean()
+//        println dis.readUTF()
+//    }
+//
+//
+////    def dir = file(rootProject.rootDir)
+////
+////    dir.traverse {
+////        if (it.directory && it.name == "app") {
+////            FileVisitResult.TERMINATE
+////        } else {
+////            println it.name
+////            FileVisitResult.CONTINUE
+////        }
+////
+////    }
+//
+////    dir.eachFile {
+////        println it.name
+////    }
+//
+////    dir.eachFileMatch(~/.*\.txt/) {
+////        println it.name
+////    }
+////
+////    dir.eachFileRecurse(groovy.io.FileType.FILES) {
+////        println it.name
+////    }
+//
+//    def fileF = file(project.buildDir.path + "/outputs/apk/debug/app-debug.apk")
+//    def fileT = file(project.buildDir.path + "/outputs/apk/debug/app-debug1.apk")
+//
+////    fileF.withObjectInputStream {  ois ->
+////        fileT.withObjectOutputStream { ous ->
+////            ous.writeObject(ois.readObject())
+////        }
+////    }
+//
+////    fileF.withReader {
+////        def lines = it.readLines()
+////        fileT.withWriter {
+////            lines.each { String line ->
+////                it.writeLine(line)
+////            }
+////        }
+////    }
+//
+//    def fromFile = file(rootProject.projectDir.path + "/build.gradle")
+//    File fromFile1 = new File((rootProject.rootDir.path + "/build.gradle"))
+//
+////    println "fromFile: ${fromFile}"
+////    println "fromFile1: ${fromFile1}"
+////    fromFile1.eachLine { String line ->
+////        println "line + $line"
+////    }
+////
+//    fromFile.withInputStream {
+//        it.eachLine {
+////            println "line: $it"
+//        }
+//    }
+//
+//    def ins = fromFile.newInputStream()
+//    ins.eachLine {
+//
+//    }
+//
+//    def toFile = file(rootProject.rootDir.path + "/toFile.gradle")
+//
+//    fromFile.withInputStream { InputStream ins1 ->
+//        toFile.withOutputStream {   OutputStream ous ->
+//            ous << ins1
+//        }
+//    }
+//
+////    copy {
+////        from file(rootProject.projectDir.path + "/local.properties")
+////        into rootProject.projectDir.path
+////        exclude()
+////        rename {
+////            "local0.txt"
+////        }
+////    }
+//
+//
+//    def mFiles = files("build.gradle","proguard-rules.pro")
+////    println mFiles[0].path + mFiles[0].text
+//    println project.path
+//    def file = project.file("build.gradle")
+//    println "文件：$file)"
+//    println "子项目： " + rootProject.childProjects.size()
+//    println rootProject.childProjects.get("app")
+//
+//    println rootProject.projectDir.path
+//    println rootProject.rootDir.path
+//    println rootProject.buildDir.path
+//    println rootProject
+//    println rootProject.ext.versionCode
+//
+//    def f = {
+//        println "hello 我是闭包"
+//    }
+//    println f.parameterTypes
+//    println f.owner
+//    println f.delegate
+//    println f.thisObject
+//    println f
+//
+//
+//}
+
+//task mytask {
+//
+////    new URL("").openConnection()
+//    def cc = {
+//        height = "hanmeimei"
+//        age = 24
+//    }
+//
+//
+////    Android bean = new Android()
+////    android.delegate = bean
+////    android.call()
+//
+//    Person person = new Person()
+//    cc.delegate = person
+//    println cc.delegate
+//
+//    to {
+//        File file = new File("D:\\IQIYI\\MyAndroid\\gradle\\wrapper\\gradle-wrapper.properties")
+//        println file.length()
+//    }
+//
+//
+//    doLast {
+//
+//    }
+//    def add =  {a,b ->
+//        a + b
+//    }
+//
+//    def method = {name,age ->
+//        name + age
+//    }
+//
+//
+//
+//
+//    def method3 = {"hello world $it"}
+//    def method4 = { -> "hello world"}
+//    println method3("mehtod3 test")
+//    println method4
+//    method.call(1,2)
+//    method(1,2)
+//    def m = method 1,2
+//    println "闭包计算结果：m: ${m}"
+//
+//    def r = 1..100
+//    println r.getFrom()
+//
+//    def key = "zzz"
+//    def map = [(key): 222,'plugin': "com.qiyi.video.iv",name: "dlm"]
+//    println map.plugin
+//    println map.get(key)
+//    println map
+//    def isA = "worlds"
+//
+//    switch (isA) {
+//        case 1:
+//            println "111111"
+//            break
+//        case [2,3,"list","worlds"]:
+//            println "hahaha worlds"
+//            break
+//        default :
+//            break;
+//    }
+//    def lista = [1,2,3]
+//    lista[0] = 11
+//    lista[101] = 1010101
+//    println lista.size()
+//    def name = isA ?: "hellos"
+//    println "names: $name"
+//    println 2**3
+//    println "isA: " + isA
+//    def project = new MyProject()
+//    def project1 = new MyProject()
+//    println project.is(project1)
+//    project.setName("Demo")
+//    project.@path = "d:/dlm/test"
+//    println "project name: ${project.getName()} ${project.path}"
+//    def s1 = 'world'
+//    def s2 = "hello ${s1}"
+//    def s3 = '''hello
+//                    world'''
+//    String s4 = 'hello world'
+//    println s1
+//    println s2
+//    println s3
+//    println s4
+//
+//    def sum = getProp 1,2
+//    println "sum: " + sum
+//    test()
+//    println test1()
+//    ArrayList<String> list = new ArrayList<>()
+//    list.add("a")
+//    list.add("b")
+//    list.add("c");
+//    for (final def s in list) {
+//        println "s: " + s
+//    }
+//    def list1 = 1
+//    println list1.class
+//    String flavorName = "xiaopeng"
+//    println "--" + flavorName
+//    def flavor = "xiao"
+//    println "==" + flavor
+//}
+
+//task writeNewPom doLast {
+//    pom {
+//        project {
+//            groupId 'com.angei'
+//            artifactId 'gradle-first'
+//            version '1.0.0'
+//        }
+//    }.writeTo("$buildDir/pom.xml")
+//}
+android {
+    compileSdkVersion 33
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.example.myandroiddemo"
+        minSdkVersion 26
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'me.jessyan:autosize:1.2.1'
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    implementation 'com.github.centerzx:ShapeBlurView:1.0.5'
+//    implementatio(["androidx.viewpager2:viewpager2:1.0.0",
+//                   "com.github.centerzx:ShapeBlurView:1.0.5",
+//                   "me.jessyan:autosize:1.2.1"])
+}

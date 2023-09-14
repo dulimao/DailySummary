@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyTools</string>
+    <string name="text_content_split_screen">分屏</string>
+    <string name="text_content_full_screen">全屏</string>
+    <string name="text_btn_jump">跳转</string>
+    <string name="text_btn_finish">销毁</string>
+</resources>
