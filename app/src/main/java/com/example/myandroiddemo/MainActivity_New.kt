@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.RemoteViews
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,19 @@ import androidx.fragment.app.FragmentActivity
 
 private const val TAG = "MainActivity_New"
 
+//【【【RemoteViews】】】 看作是 layout文件中所包含的全部视图的集合
+//【【【RemoteViewsService】】】，是管理RemoteViews的服务。
+        //(01) 通过setRemoteAdapter来设置 “RemoteViews对应RemoteViewsService”。
+        //(02) 之后在RemoteViewsService中，实现RemoteViewsFactory接口。然后，在RemoteViewsFactory接口中对“集合视图”的各个子项进行设置(“集合视图”的各个子项：例如，GridView的每一个格子都是一个子项；ListView中的每一列也是一个子项)。
+        //RemoteViewsFactory
+        //通过RemoteViewsService中的介绍，我们可以了解“RemoteViewsService是通过RemoteViewsFactory来具体管理layout中集合视图的”，即“RemoteViewsFactory管理集合视图的实施者”。
+//【【【RemoteViewsFactory】】】是RemoteViewsService中的一个接口。RemoteViewsFactory提供了一系列的方法管理“集合视图”中的每一项。例如：
+        //(01)RemoteViews getViewAt(int position)
+        //通过getViewAt()来获取“集合视图”中的第position项的视图，视图是以RemoteViews的对象返回的。
+        //(02)int getCount()
+        //通过getCount()来获取“集合视图”中所有子项的总数。
+        //
+        //因此，我们可以将 “RemoteViewsFactory 看作是 layout中集合视图管理的具体实施者”。
 class MainActivity_New : AppCompatActivity() {
     var switch: Switch? = null
     var switch_Sys: Switch? = null
