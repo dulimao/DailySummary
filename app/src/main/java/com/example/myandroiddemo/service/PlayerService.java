@@ -39,6 +39,9 @@ public class PlayerService extends Service {
             if (playerCallback != null) {
                 int progress = msg.arg1;
                 playerCallback.updateProgress(progress);
+                Intent intent = new Intent("com.play.service.action");
+                intent.putExtra("progress",progress);
+                sendBroadcast(intent);
             }
         }
     };

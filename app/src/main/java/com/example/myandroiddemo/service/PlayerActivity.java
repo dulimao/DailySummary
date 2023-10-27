@@ -1,7 +1,10 @@
 package com.example.myandroiddemo.service;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,6 +25,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private Button buttonUnBind;
     private Button buttonReset;
     private TextView textviewShow;
+    private TextView textviewShow2;
     private Intent serviceIntent;
     private PlayerService playerService;
     private boolean isBind;
@@ -35,13 +39,26 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         buttonUnBind = findViewById(R.id.button_unbind);
         buttonReset = findViewById(R.id.button_reset);
         textviewShow = findViewById(R.id.textview_show);
+        textviewShow2 = findViewById(R.id.textview_show2);
         buttonStart.setOnClickListener(this);
         buttonStop.setOnClickListener(this);
         buttonBind.setOnClickListener(this);
         buttonUnBind.setOnClickListener(this);
         buttonReset.setOnClickListener(this);
         serviceIntent = new Intent(this, PlayerService.class);
+        IntentFilter intentFilter = new IntentFilter("com.play.service.action");
+        registerReceiver(broadcastReceiver,intentFilter);
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("com.play.service.action")) {
+                int progress = intent.getIntExtra("progress",0);
+                textviewShow2.setText("广播收到 当前进度: " + progress);
+            }
+        }
+    };
 
     @Override
     public void onClick(View view) {
@@ -52,6 +69,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.button_stop:
                 stopService(serviceIntent);
+                unregisterReceiver(broadcastReceiver);
                 break;
             case R.id.button_bind:
                 serviceIntent.putExtra("url","http://www.dulilmao.com");
@@ -87,6 +105,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void updateProgress(int progress) {
-        textviewShow.setText("当前进度: " + progress);
+        textviewShow.setText("接口回调 当前进度: " + progress);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 }
