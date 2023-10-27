@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,10 +17,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myandroiddemo.IClientInterface;
+import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener, PlayerService.PlayerCallback {
 
+    private static final String TAG = "PlayerActivity";
     private Button buttonStart;
     private Button buttonStop;
     private Button buttonBind;
@@ -29,6 +34,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private Intent serviceIntent;
     private PlayerService playerService;
     private boolean isBind;
+    private boolean isSameProcess = false;//服务是否在新进程中
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,22 +75,40 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.button_stop:
                 stopService(serviceIntent);
-                unregisterReceiver(broadcastReceiver);
+//                unregisterReceiver(broadcastReceiver);
                 break;
             case R.id.button_bind:
                 serviceIntent.putExtra("url","http://www.dulilmao.com");
-                bindService(serviceIntent,connection,BIND_AUTO_CREATE);
+                if (isSameProcess) {
+                    bindService(serviceIntent,connection,BIND_AUTO_CREATE);
+                } else {
+                    bindService(serviceIntent,connectionProcess,BIND_AUTO_CREATE);
+                }
                 break;
             case R.id.button_unbind:
                 if (isBind) {
-                    unbindService(connection);
+                    if (isSameProcess) {
+                        unbindService(connection);
+                    } else {
+                        unbindService(connectionProcess);
+                    }
                 }
                 break;
                 case R.id.button_reset:
-                if (playerService!= null) {
-                    playerService.resetNumber();
-                }
-                break;
+                    if (isSameProcess) {
+                        if (playerService!= null) {
+                            playerService.resetNumber();
+                        }
+                    } else {
+                        if (iPlayInterface != null) {
+                            try {
+                                iPlayInterface.resetProgress(0);
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                    break;
         }
     }
 
@@ -100,6 +124,36 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         public void onServiceDisconnected(ComponentName componentName) {
             playerService = null;
             isBind = false;
+        }
+    };
+
+
+    IPlayInterface iPlayInterface;
+    private ServiceConnection connectionProcess = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            iPlayInterface = IPlayInterface.Stub.asInterface(iBinder);
+            try {
+                iPlayInterface.setPlayCallback(iClientInterface);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+            isBind = true;
+            Log.i(TAG, "onServiceConnected isBind: " + isBind);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            iPlayInterface = null;
+            isBind = false;
+            Log.i(TAG, "onServiceDisconnected isBind: " + isBind);
+        }
+    };
+
+    private IClientInterface.Stub iClientInterface = new IClientInterface.Stub() {
+        @Override
+        public void updateProgress(int progress) throws RemoteException {
+            textviewShow.setText("远程接口回调 当前进度: " + progress);
         }
     };
 

@@ -10,12 +10,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.myandroiddemo.IClientInterface;
+import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
 import com.gxa.car.splitscreen.view.ac.NewActivity;
 
@@ -26,25 +29,35 @@ public class PlayerService extends Service {
     public static final String CHANNEL_ID = "exampleServiceChannel";
 
     private Notification notification;
-    private PlayerCallback playerCallback;
+    //无论是同一进程还是不同进程，都可以使用广播和接口回调的方式实现双向通信，
+    // 只不过同一进程中，是Java接口，不同进程中是AIDL接口
+    private PlayerCallback playerCallback;//同一进程使用的回调接口
+    private IClientInterface iClientInterface;//独立进程用的回调接口
     private AtomicInteger atomicInteger;
 
     private boolean isRunning;
     private PlayerBinder playerBinder = new PlayerBinder();
+    private boolean isSameProcess = false;//服务是否在新进程中
 
     private Handler playerHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            int progress = msg.arg1;
             if (playerCallback != null) {
-                int progress = msg.arg1;
                 playerCallback.updateProgress(progress);
-                Intent intent = new Intent("com.play.service.action");
-                intent.putExtra("progress",progress);
-                sendBroadcast(intent);
+            }
+            if (iClientInterface != null) {
+                try {
+                    iClientInterface.updateProgress(progress);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     };
+
+
 
 
     @Override
@@ -75,6 +88,8 @@ public class PlayerService extends Service {
                 .build();
         startForeground(1,notification);
 
+//        stopForeground(true);//从前台服务切换到后台服务
+
         isRunning = true;
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -84,6 +99,10 @@ public class PlayerService extends Service {
                     Message message = Message.obtain();
                     message.arg1 = atomicInteger.get();
                     playerHandler.sendMessage(message);
+
+                    Intent intent = new Intent("com.play.service.action");
+                    intent.putExtra("progress",atomicInteger.get());
+                    sendBroadcast(intent);
                     Log.i(TAG, "thread_id: " + Thread.currentThread().getId() +" run: value: " + atomicInteger.get());
                     try {
                         Thread.sleep(1000);
@@ -104,6 +123,19 @@ public class PlayerService extends Service {
         }
     }
 
+    private final IPlayInterface.Stub binder = new IPlayInterface.Stub() {
+        @Override
+        public void resetProgress(int progress) throws RemoteException {
+            Log.i(TAG, "resetProgress: progress: " + progress);
+            resetNumber();
+        }
+
+        @Override
+        public void setPlayCallback(IClientInterface clientCnterface) throws RemoteException {
+            iClientInterface = clientCnterface;
+        }
+    };
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -111,7 +143,7 @@ public class PlayerService extends Service {
         //startService和bindService可以都执行，不分先后顺序
         String url = intent.getStringExtra("url");
         Log.i(TAG, "onBind: url: " + url);
-        return playerBinder;
+        return isSameProcess ? playerBinder : binder;
     }
 
     @Override
@@ -130,6 +162,7 @@ public class PlayerService extends Service {
     public void onDestroy() {
         //销毁 stopService()或stopSelf() 或所有绑定者都解绑
         //startService和bindService都执行的话，必须stop和unbind也都执行才能销毁
+        //需要注意的是，如果同一个服务同时被start和bind，必须既调用 stopService()方法又调用 unbindService()方法才能真正地停止服务。
         super.onDestroy();
         isRunning = false;
         atomicInteger.set(0);
