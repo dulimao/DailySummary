@@ -1,6 +1,8 @@
 package com.example.myandroiddemo.service;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -12,12 +14,18 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.example.myandroiddemo.R;
+import com.gxa.car.splitscreen.view.ac.NewActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerService extends Service {
     private static final String TAG = "PlayerService";
+    public static final String CHANNEL_ID = "exampleServiceChannel";
 
+    private Notification notification;
     private PlayerCallback playerCallback;
     private AtomicInteger atomicInteger;
 
@@ -43,6 +51,8 @@ public class PlayerService extends Service {
         Log.i(TAG, "onCreate: ");
         atomicInteger = new AtomicInteger(0);
 
+
+
     }
 
     @Override
@@ -50,6 +60,18 @@ public class PlayerService extends Service {
         //执行任务 多次执行会走多次
         String url = intent.getStringExtra("url");
         Log.i(TAG, "onStartCommand: url: " + url);
+
+        //普通后台服务置于后台一段时间就被系统杀死了，为了一直保活将次服务设置为前台服务
+        Intent intent1 = new Intent(this, NewActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent1,PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setContentTitle("前台服务通知")
+                .setContentText(url)
+                .setSmallIcon(R.drawable.aa)
+                .setContentIntent(pendingIntent)
+                .build();
+        startForeground(1,notification);
+
         isRunning = true;
         Thread thread = new Thread(new Runnable() {
             @Override
