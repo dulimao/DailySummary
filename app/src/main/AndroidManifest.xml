@@ -124,6 +124,11 @@
 
 
 
+        <activity android:name=".service.PlayerActivity">
+
+        </activity>
+
+        <service android:name=".service.PlayerService"/>
 
 
 
