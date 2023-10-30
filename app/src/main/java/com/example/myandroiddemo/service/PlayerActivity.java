@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myandroiddemo.IClientInterface;
 import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
+import com.example.myandroiddemo.view.Person;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener, PlayerService.PlayerCallback {
 
@@ -54,6 +56,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         serviceIntent = new Intent(this, PlayerService.class);
         IntentFilter intentFilter = new IntentFilter("com.play.service.action");
         registerReceiver(broadcastReceiver,intentFilter);
+
+        Intent intent = new Intent();
+        Person person = new Person("dulimao",33);
+        intent.putExtra("person",person);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("person",Person.class);
+        }
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

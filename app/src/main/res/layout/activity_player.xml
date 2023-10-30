@@ -1,58 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/button_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="启动"/>
+            android:text="启动" />
+
         <Button
             android:id="@+id/button_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="停止"/>
+            android:text="停止" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/button_bind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="绑定"/>
+            android:text="绑定" />
+
         <Button
             android:id="@+id/button_unbind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="解绑"/>
+            android:text="解绑" />
+
         <Button
             android:id="@+id/button_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="充值"/>
+            android:text="充值" />
     </LinearLayout>
-
 
 
     <TextView
         android:id="@+id/textview_show"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:textColor="#ED1717"
         android:textSize="20sp"
-        android:textColor="#ED1717"/>
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/textview_show2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:textColor="#ED1717"
         android:textSize="20sp"
-        android:textColor="#ED1717"/>
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.example.myandroiddemo.view.PlayerSurfaceView
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+        <SurfaceView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="10dp" />
+
+        <com.example.myandroiddemo.view.TestView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="#C61616"/>
+<!--        widthSize: 360  heightSize: 2008,我给了最大可以用的2008，但是你不能超过2008-->
+<!--        widthMode: EXACTLY-->
+<!--        heightMode: AT_MOST-->
+    </LinearLayout>
 
 </LinearLayout>
