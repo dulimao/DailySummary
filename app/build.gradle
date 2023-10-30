@@ -4,6 +4,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'com.google.protobuf'
 
 }
 
@@ -508,6 +509,24 @@ task test2 {
 //        }
 //    }.writeTo("$buildDir/pom.xml")
 //}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.14.0"
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+//                    option 'lite'  // Generate lite code if you don't need all features of protobuf
+                }
+            }
+        }
+    }
+    // Generate the Java sources for the protocol buffers in the 'app/src/main/proto' directory.
+//    srcDir 'src/main/proto'
+}
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.2"
@@ -536,6 +555,20 @@ android {
     buildFeatures {
         aidl true
     }
+
+    sourceSets {
+        main {
+//            proto {
+//                srcDir 'src/main/proto'
+//            }
+
+//            java {
+//                srcDir 'src/main/javas'
+//            }
+            java.srcDirs = ['src/main/javas','src/main/java']
+//            proto.srcDirs=['src/main/proto']
+        }
+    }
 }
 
 
@@ -556,4 +589,6 @@ dependencies {
 //    implementatio(["androidx.viewpager2:viewpager2:1.0.0",
 //                   "com.github.centerzx:ShapeBlurView:1.0.5",
 //                   "me.jessyan:autosize:1.2.1"])
+
+    implementation 'com.google.protobuf:protobuf-java:3.14.0'
 }
