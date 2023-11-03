@@ -18,10 +18,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androiddemo.proto.MyProtoBuf;
 import com.example.myandroiddemo.IClientInterface;
 import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
 import com.example.myandroiddemo.view.Person;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MessageLite;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener, PlayerService.PlayerCallback {
 
@@ -63,6 +66,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra("person",Person.class);
         }
+
+        MyProtoBuf.Student dlm = MyProtoBuf.Student.newBuilder().setName("dlm").setAge(22).build();
+        byte[] bytes = dlm.toByteArray();
+        try {
+            MyProtoBuf.Student student = MyProtoBuf.Student.parseFrom(bytes);
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
