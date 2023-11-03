@@ -130,7 +130,8 @@
 
         </activity>
 
-        <service android:name=".service.PlayerService" android:process=":playservice"/>
+        <service android:name=".service.PlayerService"
+            android:process=":playservice"/>
 
 
 <!--        android:process=":playservice"-->

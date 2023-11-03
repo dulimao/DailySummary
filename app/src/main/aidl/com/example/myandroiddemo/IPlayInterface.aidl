@@ -12,4 +12,5 @@ interface IPlayInterface {
     void resetProgress(int progress);
     void setPlayCallback(IClientInterface clientCnterface,inout Person person);
     void setPersons(inout List<Person> persons);
+    void setBundle(inout Bundle bundle);
 }

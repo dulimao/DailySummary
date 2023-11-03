@@ -31,13 +31,24 @@
             android:id="@+id/button_bind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="绑定" />
+            android:text="绑定1" />
+        <Button
+            android:id="@+id/button_bind2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="绑定2" />
 
         <Button
             android:id="@+id/button_unbind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="解绑" />
+
+        <Button
+            android:id="@+id/button_unbind2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解绑2" />
 
         <Button
             android:id="@+id/button_reset"

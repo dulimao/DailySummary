@@ -25,7 +25,11 @@ import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener, PlayerService.PlayerCallback {
 
@@ -33,13 +37,17 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private Button buttonStart;
     private Button buttonStop;
     private Button buttonBind;
+    private Button buttonBind2;
     private Button buttonUnBind;
+    private Button buttonUnBind2;
     private Button buttonReset;
     private TextView textviewShow;
     private TextView textviewShow2;
     private Intent serviceIntent;
+    private Intent serviceIntent2;
     private PlayerService playerService;
     private boolean isBind;
+    private boolean isBind2;
     private boolean isSameProcess = false;//服务是否在新进程中
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,16 +56,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         buttonStart = findViewById(R.id.button_start);
         buttonStop = findViewById(R.id.button_stop);
         buttonBind = findViewById(R.id.button_bind);
+        buttonBind2 = findViewById(R.id.button_bind2);
         buttonUnBind = findViewById(R.id.button_unbind);
+        buttonUnBind2 = findViewById(R.id.button_unbind2);
         buttonReset = findViewById(R.id.button_reset);
         textviewShow = findViewById(R.id.textview_show);
         textviewShow2 = findViewById(R.id.textview_show2);
         buttonStart.setOnClickListener(this);
         buttonStop.setOnClickListener(this);
         buttonBind.setOnClickListener(this);
+        buttonBind2.setOnClickListener(this);
         buttonUnBind.setOnClickListener(this);
+        buttonUnBind2.setOnClickListener(this);
         buttonReset.setOnClickListener(this);
         serviceIntent = new Intent(this, PlayerService.class);
+        serviceIntent2 = new Intent(this, PlayerService.class);
         IntentFilter intentFilter = new IntentFilter("com.play.service.action");
         registerReceiver(broadcastReceiver,intentFilter);
 
@@ -108,12 +121,30 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     bindService(serviceIntent,connectionProcess,BIND_AUTO_CREATE);
                 }
                 break;
+
+            case R.id.button_bind2:
+                serviceIntent2.putExtra("url","http://www.dulilmao2.com");
+                if (isSameProcess) {
+                    bindService(serviceIntent2,connection,BIND_AUTO_CREATE);
+                } else {
+                    bindService(serviceIntent2,connectionProcess2,BIND_AUTO_CREATE);
+                }
+                break;
             case R.id.button_unbind:
                 if (isBind) {
                     if (isSameProcess) {
                         unbindService(connection);
                     } else {
                         unbindService(connectionProcess);
+                    }
+                }
+                break;
+            case R.id.button_unbind2:
+                if (isBind2) {
+                    if (isSameProcess) {
+                        unbindService(connection);
+                    } else {
+                        unbindService(connectionProcess2);
                     }
                 }
                 break;
@@ -165,11 +196,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 iPlayInterface.setPersons(people);
                 Log.i(TAG, "onServiceConnected: person: " + person.toString());
                 Log.i(TAG, "onServiceConnected: person list: " + people.size());
+                Bundle bundle = new Bundle();
+                bundle.putString("name","dulimao");
+                iPlayInterface.setBundle(bundle);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
             isBind = true;
-            Log.i(TAG, "onServiceConnected isBind: " + isBind);
+            Log.i(TAG, "onServiceConnected isBind: " + isBind + " threadName: " + Thread.currentThread().getName());
         }
 
         @Override
@@ -177,6 +211,30 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             iPlayInterface = null;
             isBind = false;
             Log.i(TAG, "onServiceDisconnected isBind: " + isBind);
+        }
+    };
+
+    IPlayInterface iPlayInterface2;
+    private ServiceConnection connectionProcess2 = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            iPlayInterface2 = IPlayInterface.Stub.asInterface(iBinder);
+            isBind2 = true;
+            Log.i(TAG, "onServiceConnected isBind2: " + isBind2 + " thread: " + Thread.currentThread().getName());
+            Bundle bundle = new Bundle();
+            bundle.putString("name","chengquanfenge");
+            try {
+                iPlayInterface2.setBundle(bundle);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            iPlayInterface = null;
+            isBind2 = false;
+            Log.i(TAG, "onServiceDisconnected isBind2: " + isBind2);
         }
     };
 

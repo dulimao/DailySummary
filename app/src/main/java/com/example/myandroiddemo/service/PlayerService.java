@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -147,7 +148,16 @@ public class PlayerService extends Service {
             for (int i = 0; i < persons.size(); i++) {
                 Log.i(TAG, "setPersons: person " + persons.get(i).toString());
             }
-            persons.clear();
+            persons.clear();//如果是inout的话，这里clear了，客户端的也就清空了
+            Log.i(TAG, "setPersons: threadName: " + Thread.currentThread().getName());
+        }
+
+        @Override
+        public void setBundle(Bundle bundle) throws RemoteException {
+            String name = bundle.getString("name");
+            Log.i(TAG, "setBundle: name: " + name);
+            Log.i(TAG, "setBundle: threadName: "  + Thread.currentThread().getName());
+//            binder:10381_2 // Binder线程，由Binder驱动管理
         }
     };
 
@@ -157,7 +167,7 @@ public class PlayerService extends Service {
         //当有绑定者的时候，stop是停止不了的
         //startService和bindService可以都执行，不分先后顺序
         String url = intent.getStringExtra("url");
-        Log.i(TAG, "onBind: url: " + url);
+        Log.i(TAG, "onBind: url: " + url + " threadName: " + Thread.currentThread().getName());
         return isSameProcess ? playerBinder : binder;
     }
 
