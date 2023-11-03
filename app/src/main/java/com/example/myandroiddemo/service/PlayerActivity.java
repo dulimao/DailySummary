@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
@@ -22,9 +23,9 @@ import com.example.androiddemo.proto.MyProtoBuf;
 import com.example.myandroiddemo.IClientInterface;
 import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
-import com.example.myandroiddemo.view.Person;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.MessageLite;
+
+import java.util.ArrayList;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener, PlayerService.PlayerCallback {
 
@@ -156,7 +157,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             iPlayInterface = IPlayInterface.Stub.asInterface(iBinder);
             try {
-                iPlayInterface.setPlayCallback(iClientInterface);
+                Person person = new Person("dulimao",22);
+                iPlayInterface.setPlayCallback(iClientInterface,person);
+                ArrayList<Person> people = new ArrayList<>();
+                people.add(new Person("dulimao",22));
+                people.add(new Person("chengquanfeng",21));
+                iPlayInterface.setPersons(people);
+                Log.i(TAG, "onServiceConnected: person: " + person.toString());
+                Log.i(TAG, "onServiceConnected: person list: " + people.size());
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -174,9 +182,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     private IClientInterface.Stub iClientInterface = new IClientInterface.Stub() {
         @Override
-        public void updateProgress(int progress) throws RemoteException {
-            textviewShow.setText("远程接口回调 当前进度: " + progress);
+        public void updateProgress(int progress, Person person) throws RemoteException {
+            textviewShow.setText("远程接口回调 当前进度: " + progress + " person: " + person.toString());
+            Log.i(TAG, "updateProgress: 远程接口回调 当前进度: " + progress + " person: " + person.toString());
+            person.setAge(100);
         }
+
     };
 
     @Override
@@ -188,5 +199,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+
+
+
     }
 }

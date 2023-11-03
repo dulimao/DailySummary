@@ -53,7 +53,7 @@
         android:layout_height="50dp"
         android:textColor="#ED1717"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/textview_show2"
@@ -61,7 +61,7 @@
         android:layout_height="50dp"
         android:textColor="#ED1717"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

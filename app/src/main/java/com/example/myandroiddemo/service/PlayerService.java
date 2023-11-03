@@ -22,6 +22,7 @@ import com.example.myandroiddemo.IPlayInterface;
 import com.example.myandroiddemo.R;
 import com.gxa.car.splitscreen.view.ac.NewActivity;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerService extends Service {
@@ -38,6 +39,7 @@ public class PlayerService extends Service {
     private boolean isRunning;
     private PlayerBinder playerBinder = new PlayerBinder();
     private boolean isSameProcess = false;//服务是否在新进程中
+    private Person mPerson;
 
     private Handler playerHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -49,7 +51,9 @@ public class PlayerService extends Service {
             }
             if (iClientInterface != null) {
                 try {
-                    iClientInterface.updateProgress(progress);
+                    mPerson.setAge(mPerson.getAge() + 10);
+                    iClientInterface.updateProgress(progress,mPerson);
+                    Log.i(TAG, "handleMessage: mPerson: " + mPerson.toString());
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
@@ -131,8 +135,19 @@ public class PlayerService extends Service {
         }
 
         @Override
-        public void setPlayCallback(IClientInterface clientCnterface) throws RemoteException {
+        public void setPlayCallback(IClientInterface clientCnterface, Person person) throws RemoteException {
+            mPerson = person;
+            Log.i(TAG, "setPlayCallback: person: " + person.toString());
+            person.setAge(30);
             iClientInterface = clientCnterface;
+        }
+
+        @Override
+        public void setPersons(List<Person> persons) throws RemoteException {
+            for (int i = 0; i < persons.size(); i++) {
+                Log.i(TAG, "setPersons: person " + persons.get(i).toString());
+            }
+            persons.clear();
         }
     };
 
