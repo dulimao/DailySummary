@@ -196,6 +196,7 @@ public class PlayerService extends Service {
     }
 
     public void resetNumber() {
+        Log.i(TAG, "resetNumber: thread: " + Thread.currentThread().getName());
         atomicInteger.set(0);
     }
 

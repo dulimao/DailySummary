@@ -1,0 +1,41 @@
+在 Java 中，除了强引用，还提供了 SoftReference、WeakReference、PhantomReference 三种不同强度的引用类型，它们的引用强度依次递减。
+
+1. **强引用：**这是 Java 中最常见的引用类型。如果一个对象具有强引用，那么垃圾回收器就绝不会回收它。当内存空间不足时，Java虚拟机宁肯抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。
+
+```java
+String str = new String("强引用");  // str 是一个强引用
+```
+
+2. **软引用：**为了更好地进行垃圾回收，Java提供了软引用的概念。只有当 JVM 认为内存不足时，才会去试图回收软引用的对象来解决这个问题。
+
+```java
+import java.lang.ref.SoftReference;
+
+String str = new String("软引用");
+SoftReference<String> softReference = new SoftReference<>(str);  // 创建软引用
+str = null;  // 清除强引用
+```
+
+3. **弱引用：**弱引用的级别比软引用更低，只要垃圾回收机制一运行，无论 JVM 的内存空间是否足够，都会回收只被弱引用关联的对象。
+
+```java
+import java.lang.ref.WeakReference;
+
+String str = new String("弱引用");
+WeakReference<String> weakReference = new WeakReference<>(str);  // 创建弱引用
+str = null;  // 清除强引用
+```
+
+4. **虚引用：**也称为幽灵引用或者幻影引用，它是最弱的引用关系。无法通过虚引用来获取一个对象实例。为一个对象设置虚引用的目的，就是能在这个对象被回收时收到一个系统通知。
+
+```java
+import java.lang.ref.PhantomReference;
+import java.lang.ref.ReferenceQueue;
+
+String str = new String("虚引用");
+ReferenceQueue<String> queue = new ReferenceQueue<>();  // 创建一个引用队列
+PhantomReference<String> phantomReference = new PhantomReference<>(str, queue);  // 创建虚引用
+str = null;  // 清除强引用
+```
+
+以上是 Java 中的四种引用类型，主要区别在于，垃圾收集器在不同的情况下，会对各种引用类型的对象采取不同的处理方式。

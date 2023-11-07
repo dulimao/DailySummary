@@ -1,0 +1,83 @@
+Lambda表达式在Java中主要与函数式接口(Functional Interface)相关。一个函数式接口是只有一个抽象方法的接口。这个单一的方法成为了这个函数式接口的签名。Java 8在java.util.function包下引入了一些常用的函数式接口，例如Consumer、Supplier、Function和Predicate等。
+
+Lambda表达式可以被看做是一种用更简洁的语法实现函数式接口的方式。当你需要使用一个函数式接口的地方，你可以使用一个Lambda表达式。Lambda表达式的参数列表、返回值和函数体分别对应到函数式接口中方法的参数列表、返回值和方法体。
+
+例如，Java中Runnable接口就是一个函数式接口，我们可以用Lambda表达式来创建一个Runnable对象：
+
+```java
+Runnable r = () -> System.out.println("Hello, Lambda");
+```
+
+在上述代码中，`Runnable r`就是一个函数式接口的实例，`()-> System.out.println("Hello, Lambda")`就是一个lambda表达式，它实现了Runnable接口中的`run`方法。
+
+所以，从这个角度看，Lambda表达式和接口的关系是，Lambda表达式为函数式接口提供了一种更简洁的实现方式。
+
+
+还是对Lambda没理解透---------------------------------
+很抱歉，让我尝试一个不同的方法来解释：
+
+1. Lambda表达式是一个匿名函数
+   如果你阅读过像Python或者JavaScript这样的语言，你可能已经熟悉了"匿名函数"（也被称为"lambda函数"）的概念。在编程中，我们通常给函数取一个名字，然后在需要的地方调用它。然而，有些时候，给一个函数命名可能没有价值，特别是当我们只使用它一次的时候。相反，创建一个没有名字的函数并立即使用它可能会更有意义。这就是匿名函数，或者说“lambda函数”。
+
+2. Lambda函数和Java的方法很像
+   一个Java方法包含了parameters列表、一个body、一个返回类型，以及一个可选的parameters列表。一个lambda函数有着相同的部分，但是缺少了方法名，并且body部分被写进了右箭头(->)后边。
+
+例如，对于一个Java方法，它可能是这个样子：
+
+```java
+public int add(int a, int b) {
+    return a + b;
+}
+```
+
+对于一个等价的Lambda表达式：
+
+```java
+(a, b) -> a + b
+```
+
+除了没有方法名，也没有“return”字样（在Lambda表达式中，无需“return”，它会自动返回最后一行表达式的结果）。
+
+3. Java的Lambda表达式必须被一个特定的接口类型支持
+   这个接口被称为"functional interface"，它必须要有且只有一个抽象方法。一个很常见的例子是`java.util.runnable`，它没有参数，也没有返回值。另一个例子是`java.util.function.Predicate`，它接收一个generic object，然后返回一个boolean值。
+
+例如, 下面是一个lambda表达式和Runnable接口的例子:
+
+```java
+Runnable r = () -> System.out.println("Hello World");
+```
+
+在上述代码中，`() -> System.out.println("Hello World")`是一个lambda表达式，它符合Runnable接口的签名。你可以像在调用普通方法那样调用`r.run()`。
+
+我希望这个详细的解释可以让你对Lambda表达式有更深的理解。如果你还有任何问题，请随时向我提问。
+
+
+
+  public static void main(String[] args) {
+
+        int compare = compare("hello", "world", (a, b) -> {
+            return a.length() + b.length();
+        });
+
+        int compare2 = compare("good","morning",func2);
+
+
+        System.out.println(compare);
+        System.out.println(compare2);
+
+
+    }
+
+
+
+    Function<String,Integer> func = (str) -> {
+        return str.length();
+    };
+
+    static Function2<String,String,Integer> func2 = (str1,str2) -> {
+        return str1.length() + str2.length();
+    };
+
+    public static int compare(String a,String b, Function2<String,String,Integer> func) {
+        return func.invoke(a,b);
+    }

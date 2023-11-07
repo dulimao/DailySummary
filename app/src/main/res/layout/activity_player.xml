@@ -20,6 +20,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="停止" />
+
+        <Button
+            android:id="@+id/button_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="充值" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,11 +56,7 @@
             android:layout_height="wrap_content"
             android:text="解绑2" />
 
-        <Button
-            android:id="@+id/button_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="充值" />
+
     </LinearLayout>
 
 

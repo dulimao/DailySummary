@@ -28,6 +28,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 

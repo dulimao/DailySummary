@@ -55,10 +55,12 @@ public class PlayerSurfaceView extends SurfaceView implements SurfaceHolder.Call
             public void run() {
                 while (true) {
                     Canvas canvas = holder.lockCanvas();
-                    int c = ColorUtils.blendARGB(Color.RED, Color.BLUE, alpha[0]);
-                    alpha[0] += 0.1;
-                    canvas.drawColor(c);
-                    holder.unlockCanvasAndPost(canvas);
+                    if (canvas != null) {
+                        int c = ColorUtils.blendARGB(Color.RED, Color.BLUE, alpha[0]);
+                        alpha[0] += 0.1;
+                        canvas.drawColor(c);
+                        holder.unlockCanvasAndPost(canvas);
+                    }
                 }
             }
         }).start();

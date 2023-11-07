@@ -1,0 +1,51 @@
+ThreadLocal -----------------------------------
+`ThreadLocal`是Java并发编程中用于保存线程局部变量的一个类。当你在多线程环境中使用`ThreadLocal`，每个线程都有一个独立的副本，每个线程只能操作和访问它自己的副本，而不能访问其他线程的副本。这有助于减少数据正确性和竞争条件问题。
+
+它主要用于解决共享资源在并发环境下可能导致的问题，通过提供每个线程独立的变量副本，使每个线程都能安全地访问和操作自己的数据。
+
+以下是一个简单的`ThreadLocal`使用示例：
+
+```java
+public class ThreadLocalExample {
+    private static final ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
+
+    public static void main(String[] args) {
+        Runnable runnable = () -> {
+            int taskNumber = new Random().nextInt(100);
+            System.out.println(Thread.currentThread().getName() + " set task number: " + taskNumber);
+            threadLocal.set(taskNumber);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(Thread.currentThread().getName() + " get task number: " + threadLocal.get());
+        };
+
+        new Thread(runnable, "Thread1").start();
+        new Thread(runnable, "Thread2").start();
+    }
+}
+```
+
+在上述示例中，我们创建了一个`ThreadLocal`实例，用来存储每个线程的task number。我们创建了两个线程`Thread1`和`Thread2`，它们都运行相同的任务代码。在这段代码中，首先生成一个随机数并存储在`threadLocal`中，然后让线程休眠1秒钟（模拟线程执行任务过程），最后从`threadLocal`中获取存储的task number并打印出来。
+
+由于`ThreadLocal`为每个线程提供独立的副本，因此每个线程最后打印出来的task number与开始存储的数字是一致的，而不受其他线程的干扰。
+
+
+ThreadLocal原理  -----------------------------------
+
+
+ThreadLocal的核心是维护一个Map用于存放每个线程的变量副本，这个Map的键是线程对象，值是对应线程的变量副本。
+
+在具体实现中，ThreadLocal并没有直接用一个Map来存放线程的变量副本，而是让每一个线程自己持有一个Map，并且自己负责维护。每个Thread线程内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，这个threadLocals就用来存放程序调用的在当前线程里面创建的ThreadLocal实例及其值（即调用了ThreadLocal.set方法之后存放的东西）。
+
+ThreadLocalMap是ThreadLocal的一个静态内部类，用Entry对象作为键值对进行保存，其中键就是ThreadLocal对象，值就是线程变量副本。每个ThreadLocal实例在调用set()或者get()方法时，都会访问线程自己的threadLocals变量。
+
+当调用ThreadLocal的set()或者get()方法时，线程首先会在ThreadLocalMap查找是否有已经存放的对应一个键值对，这个键就是当前ThreadLocal对象，如果已经存在就直接返回已经存放的副本的值，如果不存在就会初始化一个副本的值。
+
+这样，ThreadLocal给每个线程都提供了一个独立的变量空间（Thread.currentThread().threadLocals），每个线程都可以随意修改自己的空间，而不会影响到其他的线程，这也就是实现线程间数据隔离的原理。
+
+需要注意的是，ThreadLocal虽然能有效地解决线程间的数据隔离，避免线程安全问题，但是它并不能解决多线程下的数据的同步和一致性的问题。即一个线程不能访问另一个线程的ThreadLocal副本值。

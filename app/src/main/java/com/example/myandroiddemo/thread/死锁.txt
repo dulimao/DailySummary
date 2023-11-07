@@ -1,0 +1,89 @@
+什么是死锁----------------------------------
+
+在并发计算中，死锁是指两个或多个线程永久性地阻塞，这些线程每一个都在等待其它线程做某事（通常是释放资源）。
+
+死锁的典型情况是，线程1锁定了资源A并且试图锁定资源B，而同时线程2已经锁定了资源B并且试图锁定资源A。这样，两个线程就会永久地等待对方，这就是死锁。
+
+死锁的四个必要条件如下：
+
+- 互斥条件：资源不能被共享，只能被一个线程占用并随后释放。
+
+- 请求和保持条件：线程已经持有了至少一个资源，但又提出了新的资源请求，而该资源已经被其他线程占有，所以发生了阻塞。然而，线程并没有释放其已持有的资源。
+
+- 不剥夺条件：线程所获得的资源在未使用完全之前，不会被其他线程强行剥夺，只有自己使用完毕后才释放资源。
+
+- 循环等待条件：在发生死锁时，必然存在一个线程–资源的环形链，即线程1等待线程2占用的资源，线程2等待线程3占用的资源，……，线程n等待线程1占用的资源。
+
+这四个条件是死锁的必要条件，只要系统发生死锁，这些条件必然成立，而只要上述条件之一不满足，就一定不会发生死锁。
+
+解决死锁----------------------------------
+
+上述的死锁案例中，线程1和线程2分别获取lock1和lock2，然后又试图获取对方已经获取的锁，从而造成了死锁。那么解决的方法就是让两个线程按照固定的顺序去获取锁：
+
+```java
+public class DeadlockSolution {
+    private static Object lock1 = new Object();
+    private static Object lock2 = new Object();
+
+    public static void main(String[] args) {
+        new Thread(DeadlockSolution::safeMethod, "Thread1").start();
+        new Thread(DeadlockSolution::safeMethod, "Thread2").start();
+    }
+
+    public static void safeMethod() {
+        synchronized (lock1) {
+            System.out.println(Thread.currentThread().getName() + " acquired lock on lock1");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+            synchronized (lock2) {
+                System.out.println(Thread.currentThread().getName() + " acquired lock on lock2");
+            }
+        }
+    }
+}
+```
+在上述示例中，两个线程按照lock1->lock2的顺序获取锁，这样就避免了死锁。
+
+然而，当程序中存在许多需要获取的锁，且获取锁的顺序不可控时，上述方法可能并不适用。在这种情况下，可以使用`java.util.concurrent.locks.Lock`接口中的`tryLock()`方法尝试获取锁，在给定时间内获取不到锁就放弃，这样也可以避免死锁：
+
+```java
+public class DeadlockSolution2 {
+    private static Lock lock1 = new ReentrantLock();
+    private static Lock lock2 = new ReentrantLock();
+
+    public static void main(String[] args) {
+        new Thread(DeadlockSolution2::safeMethod, "Thread1").start();
+        new Thread(DeadlockSolution2::safeMethod, "Thread2").start();
+    }
+
+    public static void safeMethod() {
+        boolean acquiredLock1 = false;
+        boolean acquiredLock2 = false;
+
+        try {
+            acquiredLock1 = lock1.tryLock(100, TimeUnit.MILLISECONDS);
+
+            if (acquiredLock1) {
+                Thread.sleep(100);
+                acquiredLock2 = lock2.tryLock(100, TimeUnit.MILLISECONDS);
+
+                if (acquiredLock2) {
+                    System.out.println(Thread.currentThread().getName() + " acquired locks");
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (acquiredLock1) {
+                lock1.unlock();
+            }
+            if (acquiredLock2) {
+                lock2.unlock();
+            }
+        }
+    }
+}
+```
+这段代码的逻辑是，第一个Thread尝试获取lock1，如果获取成功，再尝试获取lock2，任何一个尝试获取是以超时的方式，因此可以避免死锁的发生。
