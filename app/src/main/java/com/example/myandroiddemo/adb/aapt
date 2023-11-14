@@ -1,0 +1,2 @@
+aapt list -a ....apk
+aapt dump permissions ....apk > permission.txt
