@@ -134,6 +134,7 @@ class MainActivity_New : AppCompatActivity() {
         }
     }
 
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         Log.i(TAG, "onConfigurationChanged: uiMode: " + newConfig.uiMode)
         super.onConfigurationChanged(newConfig)
