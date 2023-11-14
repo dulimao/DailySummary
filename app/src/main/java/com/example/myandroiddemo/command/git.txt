@@ -1,0 +1,47 @@
+工作区（目录）  --->    暂存区 ----> 仓库
+coding ---> git add ---> git commit
+
+#代码回退
+git reset HEAD~1：回退到上一个提交
+git reset <--mixed> <commit id>:保留工作目录，但是会移除暂存区，需要重新add，再commit
+git reset --soft <commit id>:保留工作目录和暂存区，不需要重新add,直接可以commit
+git reset --hard <commit id>:不保留工作目录和暂存区
+git revert <commit id>  创建一个新的 commit，将指定的 commit 的更改撤销。这不会改变历史提交记录，而是创建一个新的撤销提交。
+
+git branch <branch_name> <commit_id> :用指定commit_id创建新分支，用于回退代码
+
+
+git reflog: 查看记录引用及哈希码，包括reset操作
+git log：列出所有的提交历史记录。
+git log -n：只显示最近 n 个提交。
+git log --author=<author>：只显示特定作者的提交历史记录。
+git log --since=<date>：只显示从指定日期之后的提交。
+git log --until=<date>：只显示到指定日期的提交。
+git log --oneline：以一行的简洁方式显示提交历史记录。
+git log --graph :以图形形式输出历史记录
+git log <other_branch> ： 查看其他分支的提交记录
+
+git init:初始化git仓库
+git status
+git add .
+git add file.txt
+git commit -m "..."
+git remote add origin git@github.com:your-username/your-repository.git:本地仓库与远程仓库建立关联
+git push -u origin master
+git pull origin master
+git remote -v :查看远程仓库地址
+
+git branch
+git branch new_branch:新建分支
+git branch -d <branch>:删除分支
+git checkout <branch>:切换分支
+
+<<<<<<< HEAD
+// 代码来自当前分支的修改
+
+=======
+// 代码来自合并的分支的修改
+
+>>>>>>> branch-name
+
+
