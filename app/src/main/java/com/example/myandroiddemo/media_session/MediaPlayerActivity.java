@@ -18,6 +18,7 @@ import com.example.myandroiddemo.R;
 import com.example.myandroiddemo.service.PlayerActivity;
 import com.google.android.material.slider.Slider;
 
+//https://developer.android.com/guide/topics/media-apps/audio-app/building-a-mediabrowser-client?hl=zh-cn
 public class MediaPlayerActivity extends AppCompatActivity {
     private static final String TAG = "MediaPlayerActivity";
 
