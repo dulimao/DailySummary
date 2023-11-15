@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentActivity
+import com.example.myandroiddemo.media_session.MediaPlaybackService
+import com.example.myandroiddemo.media_session.MediaPlayerActivity
 import com.example.myandroiddemo.service.PlayerActivity
 
 private const val TAG = "MainActivity_New"
@@ -104,9 +106,11 @@ class MainActivity_New : AppCompatActivity() {
         val textview = findViewById<TextView>(R.id.tv_title)
         textview.setOnClickListener {
             Toast.makeText(this,if (currentNightMode) "深色模式" else "浅色模式",Toast.LENGTH_LONG).show()
-            startActivity(Intent(this,PlayerActivity::class.java))
+            startActivity(Intent(this,MediaPlayerActivity::class.java))
         }
         Log.i(TAG, "onCreate: " + isNightMode(this))
+
+        startService(Intent(this,MediaPlaybackService::class.java))
 
     }
 

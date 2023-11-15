@@ -130,6 +130,19 @@
 
         </activity>
 
+        <activity android:name=".media_session.MediaPlayerActivity">
+
+        </activity>
+
+        <service android:name=".media_session.MediaPlaybackService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
+
+
         <service android:name=".service.PlayerService"
             android:process=":playservice"/>
 
