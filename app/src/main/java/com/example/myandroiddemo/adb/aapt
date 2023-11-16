@@ -1,2 +1,34 @@
 aapt list -a ....apk
 aapt dump permissions ....apk > permission.txt
+
+转储
+dump 用于输出有关您使用 link 命令生成的 APK 的信息。
+
+转储语法
+使用 dump 的一般语法如下：
+
+
+aapt2 dump sub-command filename.apk [options]
+以下示例会输出所指定 APK 的资源表中的内容：
+
+
+aapt2 dump resources output.apk
+转储子命令
+使用 dump 命令指定以下子命令之一：
+
+表 4. 转储子命令
+
+子命令	说明
+apc	输出在编译期间生成的 AAPT2 容器 (APC) 的内容。
+badging	输出从 APK 的清单提取的信息。
+configurations	输出 APK 中的资源使用的每项配置。
+overlayable	输出 APK 的可叠加资源。
+packagename	输出 APK 的软件包名称。
+permissions	输出从 APK 的清单提取的权限。
+strings	输出 APK 的资源表字符串池的内容。
+styleparents	输出 APK 中使用的样式的父项。
+resources	输出 APK 的资源表的内容。
+xmlstrings	输出 APK 的已编译 XML 中的字符串。
+xmltree	输出 APK 的已编译 XML 树。
+
+aapt dump xmltree ~/Desktop/app-debug.apk AndroidManifest.xml | grep "Activity"
