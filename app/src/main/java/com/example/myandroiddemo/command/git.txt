@@ -10,6 +10,11 @@ git revert <commit id>  创建一个新的 commit，将指定的 commit 的更�
 
 git branch <branch_name> <commit_id> :用指定commit_id创建新分支，用于回退代码
 
+git stash -m "暂时隐藏":储藏修改
+git stash list : 查看储藏列表
+git stash apply {index}: 应用储藏代码到当前分支，index:列表索引
+git stash drop {index}:删除储藏记录
+git stash clear : 清空储藏记录
 
 git reflog: 查看记录引用及哈希码，包括reset操作
 git log：列出所有的提交历史记录。
