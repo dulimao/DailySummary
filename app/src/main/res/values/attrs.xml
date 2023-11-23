@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+    <attr name="auto_design_width" format="dimension"/>
+    <attr name="auto_design_height" format="dimension" />
+    <attr name="auto_padding_height" format="dimension" />
+    <attr name="auto_padding_width" format="dimension" />
+    <attr name="auto_max_width" format="dimension" />
+    <attr name="auto_max_height" format="dimension" />
+    <declare-styleable name="AutoSpec">
+        <attr name="auto_design_width" />
+        <attr name="auto_design_height" />
+        <attr name="auto_max_width" />
+        <attr name="auto_max_height" />
+        <attr name="auto_padding_width" />
+        <attr name="auto_padding_height" />
+    </declare-styleable>
+</resources>
