@@ -1,47 +1,37 @@
 package com.example.myandroiddemo;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+//import androidx.viewpager2.widget.ViewPager2;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.Process;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.Bundle;
 
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.myandroiddemo.view.viewpager2.ListFragment;
+//import androidx.viewpager2.widget.ViewPager2;
+import com.example.myandroiddemo.view.viewpager2.ListFragment2;
 import com.gxa.car.splitscreen.view.ac.NewActivity;
 
 import java.io.ByteArrayInputStream;
@@ -105,15 +95,34 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
 
 //        testA();
 //        UrlConvertor.convertUrl(url);
-
         viewPager = findViewById(R.id.vp_vertical_stack);
 //        viewPager.setClipChildren(false);
 //        viewPager.setClipToPadding(false);
 //        viewPager.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         viewPager.setOffscreenPageLimit(6);
 
-        viewPager.setPageTransformer( new VerticalStackPageTransformerWithRotation());
-        viewPager.setAdapter(new ListAdapter(MainActivity.this));
+//        viewPager.setUserInputEnabled(false);
+//        viewPager.setPageTransformer( new VerticalStackPageTransformerWithRotation());
+        viewPager.setAdapter(new FragmentAdapter(MainActivity.this));
+    }
+
+    class FragmentAdapter extends FragmentStateAdapter {
+
+        public FragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+//            return new ListFragment();
+            return new ListFragment2();
+        }
+
+        @Override
+        public int getItemCount() {
+            return 5;
+        }
     }
 
     @Override
