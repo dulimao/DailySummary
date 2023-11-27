@@ -5,7 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.iqy.iv.ivcore.R;
+import com.example.myandroiddemo.R;
+
 
 class AutoSpecHelper {
     private View mView;
