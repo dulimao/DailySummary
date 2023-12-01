@@ -586,7 +586,7 @@ dependencies {
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
-    implementation 'com.github.centerzx:ShapeBlurView:1.0.5'
+//    implementation 'com.github.centerzx:ShapeBlurView:1.0.5'
 //    implementatio(["androidx.viewpager2:viewpager2:1.0.0",
 //                   "com.github.centerzx:ShapeBlurView:1.0.5",
 //                   "me.jessyan:autosize:1.2.1"])
