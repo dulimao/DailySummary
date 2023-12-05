@@ -552,6 +552,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+
+
+
+
+
+
     buildFeatures {
         aidl true
     }
@@ -593,4 +599,7 @@ dependencies {
 
     implementation 'com.google.protobuf:protobuf-java:3.14.0'
     implementation 'androidx.media:media:1.6.0'
+
+    annotationProcessor project(':AnnotationCompiler')
+    api project(':AnnotationModule')
 }
