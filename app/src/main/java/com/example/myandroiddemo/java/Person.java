@@ -3,10 +3,13 @@ package com.example.myandroiddemo.java;
 import com.example.annotationmodule.GenerateGetter;
 import com.example.annotationmodule.GenerateSetter;
 
-public class Person {
-    @GenerateGetter
+import java.io.Serializable;
+
+public class Person implements Serializable {
+    @GenerateGetter(name = "name")
     private String name;
-    @GenerateGetter
+    @GenerateGetter(name = "age")
     @GenerateSetter
-    private int age;
+    private static int age;
+
 }

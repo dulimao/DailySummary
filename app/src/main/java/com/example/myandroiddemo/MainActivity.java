@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.myandroiddemo.java.annotation.DisplayFactory;
 import com.example.myandroiddemo.view.viewpager2.ListFragment;
 //import androidx.viewpager2.widget.ViewPager2;
 import com.example.myandroiddemo.view.viewpager2.ListFragment2;
@@ -56,9 +57,21 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "A onCreate: ");
 
+        DisplayFactory displayFactory = DisplayFactory.getDisplayFactory();
+        while (true) {
+            Log.i(TAG, "onCreate: hasDisplay: " + displayFactory.hasNextDisplay());
+            if (displayFactory.hasNextDisplay()) {
+                Log.i(TAG, "onCreate: " + displayFactory.getDisplay().display());;
+            } else {
+                break;
+            }
+        }
         Log.i(TAG, "A onCreate: taskId: " + getTaskId());
+        com.example.myandroiddemo.Person person1 = new com.example.myandroiddemo.Person();
+        person1.setName("dulimao");
+        person1.setAge("22");
+        Log.i(TAG, "onCreate: person1 name: " + person1.getName() + " age: " + person1.getAge());
         setContentView(R.layout.activity_main);
         mSignTV = findViewById(R.id.signTV);
         mGoBtn = findViewById(R.id.toNewActivityBtn);

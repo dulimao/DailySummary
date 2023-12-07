@@ -7,6 +7,7 @@ https://blog.csdn.net/wusj3/article/details/107975241
     #第二步：注册Java注解处理器
         #方式有两种：
         #1：通过Google的AutoService库自动生成注册文件
+        #annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
         #implementation 'com.squareup:javapoet:1.13.0'
         #implementation 'com.google.auto.service:auto-service-annotations:1.0.1'
         #@AutoService(Processor.class)

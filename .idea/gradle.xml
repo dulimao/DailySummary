@@ -14,8 +14,8 @@
             <option value="$PROJECT_DIR$/AnnotationCompiler" />
             <option value="$PROJECT_DIR$/AnnotationModule" />
             <option value="$PROJECT_DIR$/AutoServiceInterfaceModule" />
-            <option value="$PROJECT_DIR$/AutoServiceModule1" />
-            <option value="$PROJECT_DIR$/AutoServiceModule2" />
+            <option value="$PROJECT_DIR$/AutoServiceModuleA" />
+            <option value="$PROJECT_DIR$/AutoServiceModuleB" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

@@ -602,4 +602,7 @@ dependencies {
 
     annotationProcessor project(':AnnotationCompiler')
     api project(':AnnotationModule')
+    implementation project(':AutoServiceInterfaceModule')
+    implementation project(':AutoServiceModuleB')
+    implementation project(':AutoServiceModuleA')
 }
