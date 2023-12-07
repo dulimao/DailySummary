@@ -1,0 +1,26 @@
+View绘制流程：
+1、确定大小
+2、确定位置
+3、自由发挥绘画天赋
+//
+onMeasure(widthMeasureSpec, int heightMeasureSpec) {
+    //widthMeasureSpec,heightMeasureSpec 是父容器根据自己的情况和子View的LayoutParams给子View的参考值
+}
+
+getMeasuredWidth()和getWidth()是什么区别------------------>
+
+相关参数赋值过程
+onMeasure() -> setMeasuredDimension() -> measuredWidth 和 measuredHeight;
+layout() -> onLayout() -> getWidth() 和 getHeight() 和 mLeft 和 mRight 和 mTop 和 mBottom
+
+`getMeasuredWidth()` 和 `getWidth()` 是 View 类中的两个不同方法，它们之间有一些区别。
+
+1. `getMeasuredWidth()`: `getMeasuredWidth()` 是测量过程中 View 的宽度，即 View 在经过布局测量后所得到的宽度值。在调用 `measure()` 方法之后，通过调用 `getMeasuredWidth()` 返回当前 View 的测量宽度。这个宽度是按照 View 在布局中所需的大小计算得出的，但并不一定与实际屏幕上的显示宽度相同，因为还需要考虑 View 的布局参数和布局容器的排列。
+
+2. `getWidth()`: `getWidth()` 是当前 View 的实际宽度，即 View 在屏幕上显示的宽度。在布局过程中，`getWidth()` 的值只有在 View 已经通过调用 `layout()` 方法进行布局后才会得到。`getWidth()` 返回的是实际像素值，因此会受到 View 的大小、布局参数、屏幕像素密度等因素的影响。
+
+要注意的是，如果在布局过程中尚未完成，或者视图还没有完全绘制完成，`getWidth()` 和 `getMeasuredWidth()` 的返回值可能会不准确或为 0。
+
+总结：`getMeasuredWidth()` 返回的是 View 的测量宽度，`getWidth()` 返回的是 View 的实际宽度。它们的区别在于测量过程和布局过程中的不同阶段的宽度值。在大多数情况下，当 View 已经布局并绘制完成时，`getWidth()` 才会返回正确的宽度值。
+
+希望以上解释能帮助你理解 `getMeasuredWidth()` 和 `getWidth()` 方法之间的区别。如有任何进一步问题，请随时提问！
