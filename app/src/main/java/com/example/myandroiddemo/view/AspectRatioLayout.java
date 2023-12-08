@@ -13,7 +13,7 @@ import com.example.myandroiddemo.R;
 
 public class AspectRatioLayout extends RelativeLayout {
     private static final String TAG = "AspectRatioLayout";
-    private float aspectRatio;
+    private float aspectRatio = 1.2f;
 
     public AspectRatioLayout(Context context) {
         super(context);
@@ -25,9 +25,9 @@ public class AspectRatioLayout extends RelativeLayout {
     }
 
     public void init(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.AspecRatio);
-        aspectRatio = typedArray.getFloat(R.styleable.AspecRatio_ratio,1f);
-        typedArray.recycle();
+//        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.AspecRatio);
+//        aspectRatio = typedArray.getFloat(R.styleable.AspecRatio_ratio,1f);
+//        typedArray.recycle();
     }
 
     @Override

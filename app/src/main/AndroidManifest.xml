@@ -149,6 +149,13 @@
 
 <!--        android:process=":playservice"-->
 
+        <receiver android:name=".recevier.ExitAppBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.qiyi.video.iv.exit"></action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

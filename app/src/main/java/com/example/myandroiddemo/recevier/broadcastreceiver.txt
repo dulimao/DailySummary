@@ -1,0 +1,62 @@
+在 Android 开发中，广播接收器可以通过静态注册和动态注册两种方式进行注册。
+
+1. 静态注册：
+静态注册是在 AndroidManifest.xml 文件中声明并注册广播接收器。这种方式使广播接收器对整个应用程序可见，并且在应用程序安装时立即生效。当触发广播时，无论应用程序是否在运行状态，都会自动启动注册的广播接收器。静态注册适用于全局广播接收器，例如系统广播或跨应用的广播。
+
+示例：
+在 AndroidManifest.xml 文件中：
+```xml
+<receiver android:name=".MyBroadcastReceiver">
+    <intent-filter>
+        <action android:name="com.example.MY_BROADCAST" />
+    </intent-filter>
+</receiver>
+```
+
+2. 动态注册：
+动态注册是通过代码在运行时注册和注销广播接收器。这种方式通常用于在应用程序的特定上下文中使用和管理广播接收器。动态注册意味着广播接收器仅在注册时才会接收广播，并在注销后停止接收广播。
+
+示例：
+在代码中注册和注销广播接收器：
+```java
+MyBroadcastReceiver receiver = new MyBroadcastReceiver();
+IntentFilter filter = new IntentFilter("com.example.MY_BROADCAST");
+registerReceiver(receiver, filter);
+
+// 当你不再需要接收广播时，可以使用以下代码注销广播接收器
+unregisterReceiver(receiver);
+```
+
+动态注册方式较为灵活，可以允许根据应用程序的需要动态地添加或移除广播接收器。
+
+需要注意的是，静态注册和动态注册是两种不同的注册方式，使用时需要根据具体的应用场景选择合适的注册方式。
+
+
+使用adb命令发送广播------------------------
+/**
+ * 你可以使用 Android Debug Bridge（ADB）命令来发送广播。以下是使用 adb 发送广播的命令示例：
+ *
+ * ```
+ * adb shell am broadcast -a com.example.MY_BROADCAST
+ * ```
+ *
+ * 这将发送一个名为 "com.example.MY_BROADCAST" 的广播消息。你可以根据需要修改广播的操作或其他属性。
+ *
+ * 如果你需要传递额外的数据给广播接收器，可以使用 `-e` 参数来添加额外的键值对数据，例如：
+ *
+ * ```
+ * adb shell am broadcast -a com.example.MY_BROADCAST -e key1 value1 -e key2 value2
+ * ```
+ *
+ * 这将在广播中添加两个键值对数据 "key1" 和 "key2"。
+ *
+ * 要发送隐式广播（即不直接指定广播接收器的类名），请在广播发送命令中使用 `-n` 参数，并指定接收器的包名和类名：
+ *
+ * ```
+ * adb shell am broadcast -a com.example.MY_BROADCAST -n com.example.receiver/.MyBroadcastReceiver
+ * ```
+ *
+ * 这将发送一个 "com.example.MY_BROADCAST" 的广播给名为 "com.example.receiver" 的包中的 "MyBroadcastReceiver" 类接收。
+ *
+ * 请注意，adb 命令发送的广播仅在设备上有效，并且需要设备具有相应的广播接收器来接收广播并执行逻辑代码。
+ */
