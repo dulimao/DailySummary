@@ -17,6 +17,8 @@
             <option value="$PROJECT_DIR$/AutoServiceModuleA" />
             <option value="$PROJECT_DIR$/AutoServiceModuleB" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/webview" />
           </set>
         </option>
       </GradleProjectSettings>

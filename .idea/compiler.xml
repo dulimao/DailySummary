@@ -23,6 +23,8 @@
       <module name="DailySummary.MyAndroidDemo.AutoServiceModuleA" target="11" />
       <module name="MyAndroidDemo.app" target="11" />
       <module name="MyAndroidDemo.AutoServiceModuleA" target="11" />
+      <module name="MyAndroidDemo.common" target="11" />
+      <module name="MyAndroidDemo.webview" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
