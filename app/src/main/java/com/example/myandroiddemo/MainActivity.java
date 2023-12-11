@@ -28,10 +28,14 @@ import android.content.pm.Signature;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.common.AutoServiceTool;
 import com.example.common.IWebViewService;
 import com.example.myandroiddemo.java.annotation.DisplayFactory;
+import com.example.myandroiddemo.java.proxy.InjectView;
+import com.example.myandroiddemo.java.proxy.OnClick;
+import com.example.myandroiddemo.java.proxy.ViewUtils;
 import com.example.myandroiddemo.view.viewpager2.ListFragment;
 //import androidx.viewpager2.widget.ViewPager2;
 import com.example.myandroiddemo.view.viewpager2.ListFragment2;
@@ -53,6 +57,8 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
     List<byte[]> list;
     String url = "https://iface2.iqiyi.com/control/3.0/init_login?app_vm=1&app_s=1dddca34440ef1a4afdbbd88ed31c48c&usr_new=0&usr_type=-1&ir_id=&ir_v=2.3.3&init_crash=0&init_sid=wksrpeiwb5s93t93&init_type=0&init_first_ts=&push_id_qiyi=&init_push_id=&dev_model=AGM3-W09HN&dev_manufacturer=HONOR&scrn_size=7.08&dev_break=false&msg_ctl=2&msg_t=2,3,4,5,6,7,8&msg_s=0,5,9,12,15,25&install_first_ts=1678328439319&up_ts=1678330379218&spt_1080p=1&spt_h265=1&init_sub_type=&start_page=0&push_sw=1&fkey=&sdk_v=1556&abiFilter=2&sdk_build=1556.0.12120&cpu_platform=MT6769V%2FCT&android_api_level=29&qyidv2=57484B94747F8AC95D79C491817123C3&oris=&referer=&hdfit=%7B%22ua%22%3A%22AGM3-W09HN%22%2C%22h%22%3A1200%2C%22w%22%3A1920%2C%22h_dpi%22%3A320%2C%22w_dpi%22%3A320%2C%22density%22%3A2%2C%22app_v%22%3A%223.1.2%22%2C%22dev_os%22%3A%2210%22%2C%22platform_id%22%3A%221108%22%2C%22is_pkg_pad%22%3Afalse%7D&iqid=&identifying=70ad7b3fd5874ae982636c5759a380561105&qyctxv=1&qyctx=bf1fe71a024681f8ecb9d1ea8b8c06a89a0783855b39c5f5eec5c11b51487e45&qylct=&oaid=6f5d42a9-d645-4a64-9afd-b86bd8f3eae1&device_name=AGM3-W09HN&device_type=AGM3-W09HN&ptid=11025132630000000000&verifyPhone=1&dfp=14431abb50da734fa395140b12453b8862a851c04754490e6538afa6cec08f8713&dev_brand=HONOR&isdcdu=0&ext=";
     String uri = "http://iface2.iqiyi.com:443/control/3.0/init_login?app_vm=1&app_s=1dddca34440ef1a4afdbbd88ed31c48c&usr_new=0&usr_type=-1&ir_id=&ir_v=2.3.3&init_crash=0&init_sid=wksrpeiwb5s93t93&init_type=0&init_first_ts=&push_id_qiyi=&init_push_id=&dev_model=AGM3-W09HN&dev_manufacturer=HONOR&scrn_size=7.08&dev_break=false&msg_ctl=2&msg_t=2,3,4,5,6,7,8&msg_s=0,5,9,12,15,25&install_first_ts=1678328439319&up_ts=1678330379218&spt_1080p=1&spt_h265=1&init_sub_type=&start_page=0&push_sw=1&fkey=&sdk_v=1556&abiFilter=2&sdk_build=1556.0.12120&cpu_platform=MT6769V/CT&android_api_level=29&qyidv2=57484B94747F8AC95D79C491817123C3&oris=&referer=&hdfit=%7B%22ua%22:%22AGM3-W09HN%22,%22h%22:1200,%22w%22:1920,%22h_dpi%22:320,%22w_dpi%22:320,%22density%22:2,%22app_v%22:%223.1.2%22,%22dev_os%22:%2210%22,%22platform_id%22:%221108%22,%22is_pkg_pad%22:false%7D&iqid=&identifying=70ad7b3fd5874ae982636c5759a380561105&qyctxv=1&qyctx=bf1fe71a024681f8ecb9d1ea8b8c06a89a0783855b39c5f5eec5c11b51487e45&qylct=&oaid=6f5d42a9-d645-4a64-9afd-b86bd8f3eae1&device_name=AGM3-W09HN&device_type=AGM3-W09HN&ptid=11025132630000000000&verifyPhone=1&dfp=14431abb50da734fa395140b12453b8862a851c04754490e6538afa6cec08f8713&dev_brand=HONOR&isdcdu=0&ext=";
+
+    @InjectView(value = R.id.signTV)
     private TextView mSignTV;
     private TextView mGoBtn;
     private ViewPager2 viewPager;
@@ -86,6 +92,7 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
                 startActivity(intent);
             }
         });
+
         getAPKSign("com.qiyi.video.iv");
 //        ImageView imageView = findViewById(R.id.imageview);
 //
@@ -120,6 +127,7 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
 //        viewPager.setUserInputEnabled(false);
 //        viewPager.setPageTransformer( new VerticalStackPageTransformerWithRotation());
         viewPager.setAdapter(new FragmentAdapter(MainActivity.this));
+        ViewUtils.injectEvent(this);
     }
 
     class FragmentAdapter extends FragmentStateAdapter {
@@ -259,6 +267,12 @@ public class MainActivity extends FragmentActivity {//C9EC96C48945AA08BCBF6D2415
     }
 
 
+
+    @OnClick({R.id.signTV})
+    public void onClickView(View view) {
+        Log.i(TAG, "onClickView: ");
+        Toast.makeText(this, "" + view.getClass(), Toast.LENGTH_SHORT).show();
+    }
 
 
     @Override
