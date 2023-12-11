@@ -605,4 +605,7 @@ dependencies {
     implementation project(':AutoServiceInterfaceModule')
     implementation project(':AutoServiceModuleB')
     implementation project(':AutoServiceModuleA')
+
+    implementation project(':common')
+    implementation project(':webview')
 }
